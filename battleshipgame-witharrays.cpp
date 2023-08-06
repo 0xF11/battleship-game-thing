@@ -1,85 +1,106 @@
 #include <iostream>
 #include <limits>
 
-int errorhandler() // handles errors incase user inputs invalid variables
+
+void errorhandler()
 {
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 int main()
 {
-	int beggining;
-	beggining: // allows user to restart the game if theydesire
-	bool shipnumbers[5][5] // ship allignment
+	int restart{};
+	restart:
+
+	bool battleships[4][4]
 	{
-		{1,0,0,1,0},
-		{0,0,1,0,0},
-		{0,0,0,1,0},
-		{0,1,0,0,0},
-		{0,0,0,0,1}
+		{1,1,0,1},
+		{0,1,0,1},
+		{0,0,0,1},
+		{0,0,1,0},
 	};
 
-	int hitammount{ 0 }; // hits
-	int numberofturns{ 0 }; // turns
-
-
-
-	while (hitammount < 6) // while ships are still alive
+	int shooter{};
+	int roundsplayed{};
+	std::cout << "Man your stations men! Its time to take out some ships! \n\n";
+	while (shooter < 7)
 	{
-
-		// error handling
+		// ERROR HANDLING (GAME) START 
 		if (!std::cin)
 		{
-			if (std::cin.eof()) // user breaks out of line
+			if (std::cin.eof()) // user somehow escapes 
 			{
-				exit(0);
+				exit(0);// close program
 			}
-			std::cin.clear(); // sets user back to op mode
-			errorhandler(); // handles errors
+			std::cin.clear(); // puts user back into an operational mode
+			errorhandler(); // gets rid of any errors above and ignores extra variable input past the first variable
 		}
+		// ERROR HANDLING (GAME) END
 
-		int row, column;// allows input for the row and the column
-		std::cout << "Select your coordinates soldier!"; 
 
-		std::cout << "\nWhat row would you like to attack! - Choose between 0 and 4\n";
-		std::cin >> row; // intake row
+		// GAME START
+		int row, column; // initalizes row and column for use later
+		std::cout << "------------------------------------\n";
 
-		std::cout << "You are choosing to attack row " << row << " now, pick which colum in that row you're attacking: \n";
-		std::cin >> column; // intake column
+		std::cout << "Enter the row you want to target! \n";
+		std::cin >> row; // Intake the row the user wants to hit
+		std::cout << "You're aiming for row " << row << " Now choose the column you want to hit. \n";
+		std::cin >> column; // intakes the column the user wants to hit
 
-		if (shipnumbers[row][column])
+		if (battleships[row][column]) // assigns battleships array numbers to row and column
 		{
-			shipnumbers[row][column] = 0; // If someone hits a ship set it to 0
-
-			std::cout << "Nice shot! \n"; // Let player know they hit something.
-			++hitammount; // add to hit ammount (makes sure game doesnt end prematurely)
+			battleships[row][column] = 0; // if the user hits a battleship it will set our boolean to false 
+			std::cout << "Hit! Nice work meatbag!\n"; // lets user know they hit something 
+			++shooter; // adds to the shooter count (amount of times the player has hit the target)
 		}
-		else
+		else 
 		{
-			std::cout << "You missed...\n"; // tell the player if they missed something
+			std::cout << "\nYou missed. Way to go doucebag.\n"; // Otherwise let the player know theyve missed
+			
+		}
+		++roundsplayed; // adds to the round counter
+		if (roundsplayed == 15) // if the player actually fucking sucks output this line of code
+		{
+			std::cout << "You're gonna get us killed with this horrible shooting! C'mon maggot! You're shooting like a girl.\n";
+
 		}
 
-		++numberofturns; // ad dto number of turns for final message
-		errorhandler();
+
 	}
-	std::cout << "\n--------------------------------------------------------------------------------------------------------\n";
-	std::cout << "\n--------------------------------------------------------------------------------------------------------";
-	std::cout << "\n--------------------------------------------------------------------------------------------------------\n\n";
-	std::cout << "Awesome! You where a winner at " << numberofturns << "The lowest possible turns you can win in is 6! \n";
-	
 
-  // restart game
-		char yn{ 'a' };
-		std::cout << "Play again? y/n";
-		std::cin >> yn; 
-		if (yn == 'y')
+	std::cout << "Good job kid, We won the war thanks to you!\n";
+	std::cout << "---------------------------------------------\n";
+	std::cout << "If you would like to play again please type y, if not type n or close the application.\n";
+	// GAME END
+
+	// REPLAYERROR HANDLING START
+
+	if (!std::cin)
+	{
+		if (std::cin.eof()) // user leaves line somehow
 		{
-			goto beggining;
+			exit(0); // end program early
 		}
-		if (yn == 'n')
-		{
-			return 0;
-		}
+
+		std::cin.clear();
+		errorhandler(); // clears variables used past first variable and handles errors
+	}
+	// REPLAYERROR HANDLING END	
+
+	// REPLAY START
+	char replay{};
+	std::cin >> replay;
+	if (replay == 'y')
+	{
+		goto restart;
+	}
+	else
+	{
 		return 0;
-	
+	}
+	// REPLAY END
+
+	return 0;
+
+
 }
